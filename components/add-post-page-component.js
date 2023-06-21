@@ -2,11 +2,11 @@
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { addPost } from "../api.js";
-
+import { getToken } from "../index.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
-
+  let imageUrl = "";
 
   const render = () => {
     // TODO: Реализовать страницу добавления поста
@@ -16,7 +16,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       <p class="form-title">Добавить пост</p>
       <div class="upload-image-container"></div>
       <p class="form-title-small"> Опишите фотографию:</p>
-      <textarea name="" id="" class="add-post-text" rows="4"></textarea>
+      <textarea name="" id="text-area" class="add-post-text" rows="4"></textarea>
       <button class="button add-post-button" id="add-button">Добавить</button>
     </div>
   `;
@@ -33,12 +33,25 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         imageUrl = newImageUrl;
       },
     });
-    let description = document.getElementById("")
+    
+
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
-      });
+      let description = document.getElementById("text-area").value
+    // let imageUrl = document.getElementById("upload-image-container")
+      
+    if (description === "") {
+      alert('Добавьте описание к фотографии')
+    } 
+    if (imageUrl === "") {
+      alert('Выберите фотографию')
+    }
+
+    addPost({
+      token: getToken(),
+      description: description,
+      imageUrl: imageUrl,
+    });
+    onAddPostClick();
     });
   };
 
