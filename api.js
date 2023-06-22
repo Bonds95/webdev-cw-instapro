@@ -87,3 +87,15 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+export function getUserPosts({ id, token }) {
+  return fetch(postsHost + `/user-posts/${id}`, {
+    method: 'GET',
+    headers: { 
+      Authorization: token,
+    },
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    return data.posts;
+  })
+};
