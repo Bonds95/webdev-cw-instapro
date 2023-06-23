@@ -28,7 +28,7 @@ export function addPost({ token, description, imageUrl }) {
     body: JSON.stringify({
       description,
       imageUrl
-  }),
+    }),
     headers: {
       Authorization: token,
     },
@@ -39,6 +39,9 @@ export function addPost({ token, description, imageUrl }) {
       }
 
       return response.json();
+    })
+    .then(() => {
+      return getPosts()
     })
 }
 
@@ -90,12 +93,62 @@ export function uploadImage({ file }) {
 export function getUserPosts({ id, token }) {
   return fetch(postsHost + `/user-posts/${id}`, {
     method: 'GET',
-    headers: { 
+    headers: {
       Authorization: token,
     },
   })
-  .then((res) => res.json())
-  .then((data) => {
-    return data.posts;
+    .then((res) => res.json())
+    .then((data) => {
+      return data.posts;
+    })
+};
+
+export function deletePost({ id, token }) {
+  return fetch(postsHost + `/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    }
+  }).then((res) => {
+
+    if (res.status === 200) {
+      res.json();
+    } else if (res.status === 401) {
+      throw new Error('Нет авторизации')
+    } else {
+      throw new Error('Вы можете удалить только свой пост')
+    }
   })
+};
+
+
+export function likeFetchFunction({ id, token }) {
+  return fetch(postsHost + `/${id}/like`, {
+    method: 'POST',
+    headers: {
+      Authorization: token,
+    }
+  })
+    .then((res) => {
+      if (res.status === 401) {
+        throw new Error('Для данного действия необходимо авторизоваться')
+      }
+      res.json()
+    })
+};
+
+
+export function dislikeFetchFunction({ id, token }) {
+  return fetch(postsHost + `/${id}/dislike`, {
+    method: 'POST',
+    headers: {
+      Authorization: token,
+    }
+  })
+    .then((res) => {
+      if (res.status === 401) {
+        throw new Error('Для данного действия необходимо авторизоваться')
+      }
+      return res.json()
+    })
 };
