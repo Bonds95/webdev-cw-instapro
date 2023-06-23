@@ -41,7 +41,7 @@ export function addPost({ token, description, imageUrl }) {
       return response.json();
     })
     .then(() => {
-      return getPosts()
+      return getPosts(token)
     })
 }
 
